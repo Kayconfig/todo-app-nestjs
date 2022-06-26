@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  test-db:
+    image: postgres:latest
+    ports:
+      - 5435:5432
+    networks:
+      - localhost
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: todo-test
+
+  dev-db:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    networks:
+      - localhost
+    environment:
+      POSTGRES_DB: todo-dev
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+networks:
+  localhost:
