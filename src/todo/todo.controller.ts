@@ -18,7 +18,7 @@ import { CreateTodoDto, TodoDto, UpdateTodoDto } from './dto';
 import { TodoService } from './todo.service';
 
 @UseGuards(JwtAuthGuard)
-@ApiTags('/todos')
+@ApiTags('v1/todos')
 @ApiHeader({
   name: 'Authorization',
   description: 'Jwt token for authorization.',
