@@ -17,8 +17,8 @@ async function bootstrap() {
       'The Todo API that helps authenticated users manage important activities',
     )
     .setVersion('1.0')
-    .addTag('/auth', 'Allow users to signin and sign up')
-    .addTag('/todos', 'Allow authenticated users to create todos')
+    .addTag('v1/auth', 'Allow users to signin and sign up')
+    .addTag('v1/todos', 'Allow authenticated users to create todos')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
