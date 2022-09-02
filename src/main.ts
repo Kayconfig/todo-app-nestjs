@@ -11,14 +11,16 @@ async function bootstrap() {
     }),
   );
 
+  app.setGlobalPrefix('/api/v1');
+
   const config = new DocumentBuilder()
     .setTitle('Todo API')
     .setDescription(
       'The Todo API that helps authenticated users manage important activities',
     )
     .setVersion('1.0')
-    .addTag('v1/auth', 'Allow users to signin and sign up')
-    .addTag('v1/todos', 'Allow authenticated users to create todos')
+    .addTag('/auth', 'Allow users to signin and sign up')
+    .addTag('/todos', 'Todo for users')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);

@@ -11,27 +11,20 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+
 import { GetUser } from '../auth/decorator';
 import { JwtAuthGuard } from '../auth/jwt-guard.guard';
 import { CreateTodoDto, TodoDto, UpdateTodoDto } from './dto';
 import { TodoService } from './todo.service';
 
 @UseGuards(JwtAuthGuard)
-@ApiTags('v1/todos')
-@ApiHeader({
-  name: 'Authorization',
-  description: 'Jwt token for authorization.',
-})
-@Controller('v1/todos')
+@ApiTags('/todos')
+@Controller('todos')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
   @Post()
-  @ApiCreatedResponse({
-    description: 'Todo created successfully.',
-    type: TodoDto,
-  })
-  createTodo(
+  async createTodo(
     @Body() todoDto: CreateTodoDto,
     @GetUser('id') ownerId: number,
   ): Promise<TodoDto> {
@@ -39,12 +32,12 @@ export class TodoController {
   }
 
   @Get()
-  getAllTodos(@GetUser('id') ownerId: number): Promise<TodoDto[]> {
+  async getAllTodos(@GetUser('id') ownerId: number): Promise<TodoDto[]> {
     return this.todoService.getTodos(ownerId);
   }
 
   @Patch(':todoId')
-  updateTodoById(
+  async updateTodoById(
     @Body() dto: UpdateTodoDto,
     @GetUser('id') ownerId: number,
     @Param('todoId', ParseIntPipe) todoId: number,
@@ -53,7 +46,7 @@ export class TodoController {
   }
 
   @Get(':todoId')
-  getTodoById(
+  async getTodoById(
     @Param('todoId', ParseIntPipe) todoId: number,
     @GetUser('id') ownerId: number,
   ): Promise<TodoDto> {
@@ -62,7 +55,7 @@ export class TodoController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':todoId')
-  deleteTodoById(
+  async deleteTodoById(
     @Param('todoId', ParseIntPipe) todoId: number,
     @GetUser('id') ownerId: number,
   ): Promise<void> {

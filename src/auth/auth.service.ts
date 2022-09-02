@@ -12,6 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { hashSync } from 'bcrypt';
 import { LoginUserDto } from './dto/';
+import { User } from '../user/entities';
+import { LoginResponse } from './entities/login-response.entity';
 
 @Injectable()
 export class AuthService {
@@ -32,14 +34,13 @@ export class AuthService {
       }
       return omit(user, ['password']);
     } catch (err) {
-      throw new InternalServerErrorException({
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: ['Unable to validate user, please try again later.'],
-      });
+      throw new InternalServerErrorException(
+        'Unable to validate user, please try again later.',
+      );
     }
   }
 
-  async signup(userDetails: CreateUserDto) {
+  async signup(userDetails: CreateUserDto): Promise<User> {
     try {
       const userWithHashedPass = this.encryptPass(userDetails);
       return omit(await this.userService.createOne(userWithHashedPass), [
@@ -74,7 +75,7 @@ export class AuthService {
       const { email, password } = loginDetails;
       const { id: userId } = await this.validateUser(email, password);
       const token = await this.generateToken(email, userId);
-      return { token };
+      return { token } as LoginResponse;
     } catch (err) {
       throw new InternalServerErrorException({
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
